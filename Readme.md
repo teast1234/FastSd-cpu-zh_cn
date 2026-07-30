@@ -1,29 +1,47 @@
 # 🎨 FastSD CPU — CPU 快速 AI 生图（Windows 中文 Fork）
 
-**语言 / Languages:** **简体中文** | [上游英文文档](https://github.com/rupeshs/fastsdcpu/blob/main/Readme.md)
+**语言 / Languages:** **简体中文** | [English](./README.en.md)
 
 在 **CPU** 上快速运行 Stable Diffusion 的工具：基于 [Latent Consistency Models (LCM)](https://github.com/luosiallen/latent-consistency-model) 与 [OpenVINO](https://github.com/openvinotoolkit/openvino) 加速，无需独立显卡也能在数秒～数分钟内出图。
 
 本仓库基于上游 [rupeshs/fastsdcpu](https://github.com/rupeshs/fastsdcpu) 修改：**修复 Windows 官方安装后无法启动的问题**，并将桌面 GUI 汉化。上游英文原版说明仍可参考官方仓库；**本文件记录 Fork 改动与完整中文使用说明**。
 
 > ⭐ **如果这个项目帮到你，欢迎去仓库点个 Star 支持一下～**  
+> 👉 [https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn](https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn)  
 > 你的一颗星，是个人开发者继续更新的最大动力 ❤️
 
 | | |
 |---|---|
+| 仓库 | [gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn](https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn) |
 | 上游项目 | [github.com/rupeshs/fastsdcpu](https://github.com/rupeshs/fastsdcpu) |
-| Releases | [官方 Releases](https://github.com/rupeshs/fastsdcpu/releases) |
+| Releases | [上游 Releases](https://github.com/rupeshs/fastsdcpu/releases) |
 | 协议 | [MIT](./LICENSE) |
 | 作者 | abbuibuibui |
 | 联系 | [3244940576@qq.com](mailto:3244940576@qq.com) |
 
-### ✨ 演示：桌面 GUI / Web UI
+### ✨ 演示：中文桌面 GUI / Web UI
 
-上游项目截图（本 Fork 桌面 GUI 已汉化，布局一致）：
+本 Fork 桌面 GUI 已完整汉化，标签页包括：文生图 · 图生图 · 图像变体 · 放大 · 设置 · LoRA 模型 · ControlNet · 关于。
 
-![FastSD CPU Desktop GUI](docs/images/fastsdcpu-gui.jpg)
+**文生图（桌面 GUI）**
 
-![FastSD CPU WebUI](docs/images/fastsdcpu-webui.png)
+![文生图](docs/images/gui-txt2img-zh.png)
+
+**设置（LCM / LCM-LoRA / OpenVINO 等）**
+
+![设置](docs/images/gui-settings-zh.png)
+
+**LoRA 模型**
+
+![LoRA 模型](docs/images/gui-lora-zh.png)
+
+**ControlNet**
+
+![ControlNet](docs/images/gui-controlnet-zh.png)
+
+**Web UI（英文界面，功能更全；示例运行于 Intel i5-14400）**
+
+![Web UI 文生图](docs/images/webui-txt2img.png)
 
 ---
 
@@ -191,7 +209,8 @@ fastsdcpu/
 │   └── backend/                # 推理流水线
 ├── docs/images/                # 文档截图
 ├── LICENSE
-└── README.md                   # 本文件（中文 Fork 说明）
+├── README.md                   # 本文件（中文，Gitee 默认展示）
+└── README.en.md                # English
 ```
 
 ---
@@ -237,9 +256,8 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ### 2. 获取代码
 
 ```powershell
-# 克隆本 Fork（将 URL 换成你的仓库地址）
-git clone <你的仓库地址>
-cd fastsdcpu
+git clone https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn.git
+cd fast-sd-cpu-zh_cn
 ```
 
 或从上游 Release 下载 zip 后，使用本 Fork 的安装脚本与依赖锁定版本。
@@ -502,6 +520,7 @@ A: 删除 `env\`，重新 `install.bat`，确认出现 `Dependency check: OK`；
 
 ## 🔗 参考链接
 
+- 本仓库：<https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn>
 - 上游主页：<https://github.com/rupeshs/fastsdcpu>
 - Releases：<https://github.com/rupeshs/fastsdcpu/releases>
 - LoRA / 模型：<https://civitai.com/> · <https://huggingface.co/>
@@ -514,8 +533,8 @@ A: 删除 `env\`，重新 `install.bat`，确认出现 `Dependency check: OK`；
 
 如果这个项目对你有帮助，拜托：
 
-1. ⭐ 去仓库点个 **Star**
-2. 🐛 遇到问题提 Issue（请附上 Windows 版本、Python 版本、完整报错）
+1. ⭐ 去仓库点个 **Star**：[fast-sd-cpu-zh_cn](https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn)
+2. 🐛 遇到问题提 [Issue](https://gitee.com/shenzhen-minglue/fast-sd-cpu-zh_cn/issues)（请附上 Windows 版本、Python 版本、完整报错）
 3. ✉️ 想交流可发邮件：[3244940576@qq.com](mailto:3244940576@qq.com)（作者：abbuibuibui）
 
 也欢迎提交 Pull Request（请先说明改动目的与测试方式）～
@@ -529,7 +548,7 @@ A: 删除 `env\`，重新 `install.bat`，确认出现 `Dependency check: OK`；
 本项目基于 [MIT License](./LICENSE) 开源（与上游一致）。
 
 ```text
-Copyright (c) abbuibuibui
+Copyright (c) 2026 abbuibuibui
 ```
 
 使用第三方模型与数据源时，请自行遵守对方服务条款与许可；本项目仅供学习与研究，不对生成内容作保证。用户须遵守当地法律并负责任地使用。
