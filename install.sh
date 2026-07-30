@@ -32,12 +32,17 @@ source "$BASEDIR/env/bin/activate"
 uv pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu
 if [[ "$1" == "--disable-gui" ]]; then
     #! For termux , we don't need Qt based GUI
-    packages="$(grep -v "^ *#\|^PyQt5" requirements.txt | grep .)" 
+    packages="$(grep -v "^ *#\|^PyQt5" requirements.txt | grep .)"
     # shellcheck disable=SC2086
     uv pip install $packages
 else
     uv pip install -r "$BASEDIR/requirements.txt"
 fi
+# Re-pin versions that transitive deps may upgrade
+uv pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu \
+    numpy==1.26.4 Pillow==9.4.0 onnxruntime==1.19.2 sentencepiece==0.2.0 protobuf==4.25.9
+echo "Verifying critical dependencies..."
+python -c "import torch, torchvision, sentencepiece, onnxruntime, cv2; print('Dependency check: OK')"
 
 chmod +x "start.sh"
 chmod +x "start-webui.sh"

@@ -17,6 +17,7 @@ from app_settings import AppSettings
 from urllib.parse import urlparse, unquote
 from frontend.gui.base_widget import BaseWidget
 from backend.models.lcmdiffusion_setting import DiffusionTask
+from frontend.i18n import tr
 
 
 class Img2ImgWidget(BaseWidget):
@@ -24,14 +25,14 @@ class Img2ImgWidget(BaseWidget):
         super().__init__(config, parent)
 
         # Create init image selection widgets
-        self.img_label = QLabel("Init image:")
+        self.img_label = QLabel(tr("img2img.init_image"))
         self.img_path = QLineEdit()
         self.img_path.setReadOnly(True)
         self.img_path.setAcceptDrops(True)
         self.img_path.installEventFilter(self)
         self.img_browse = QToolButton()
         self.img_browse.setText("...")
-        self.img_browse.setToolTip("Browse for an init image")
+        self.img_browse.setToolTip(tr("img2img.browse_tooltip"))
         self.img_browse.clicked.connect(self.browse_click)
         # Create the init image selection layout
         hlayout = QHBoxLayout()
@@ -39,7 +40,7 @@ class Img2ImgWidget(BaseWidget):
         hlayout.addWidget(self.img_path)
         hlayout.addWidget(self.img_browse)
 
-        self.strength_label = QLabel("Denoising strength: 0.3")
+        self.strength_label = QLabel(tr("img2img.strength", value=0.3))
         self.strength = QSlider(orientation=Qt.Orientation.Horizontal)
         self.strength.setMaximum(10)
         self.strength.setMinimum(1)
@@ -58,7 +59,7 @@ class Img2ImgWidget(BaseWidget):
 
     def show_file_selection_dialog(self) -> str:
         filename = QFileDialog.getOpenFileName(
-            self, "Open Image", "results", "Image Files (*.png *.jpg *.bmp)"
+            self, tr("img2img.open_image"), "results", tr("img2img.image_filter")
         )
         return filename
 
@@ -111,5 +112,5 @@ class Img2ImgWidget(BaseWidget):
 
     def update_strength_label(self, value):
         val = round(int(value) / 10, 1)
-        self.strength_label.setText(f"Denoising strength: {val}")
+        self.strength_label.setText(tr("img2img.strength", value=val))
         self.config.settings.lcm_diffusion_setting.strength = val

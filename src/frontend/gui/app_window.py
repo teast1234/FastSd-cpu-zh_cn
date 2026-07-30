@@ -43,6 +43,7 @@ from models.interface_types import InterfaceType
 from frontend.gui.base_widget import BaseWidget, ImageLabel
 from frontend.gui.lora_widget import LoraModelsWidget
 from frontend.gui.controlnet_widget import ControlNetWidget
+from frontend.i18n import tr
 
 # DPI scale fix
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -65,7 +66,7 @@ class MainWindow(QMainWindow):
             self.config.settings.lcm_diffusion_setting.lora.enabled = False
         if self.config.settings.lcm_diffusion_setting.controlnet:
             self.config.settings.lcm_diffusion_setting.controlnet.enabled = False
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle(tr("app.name"))
         self.setFixedSize(QSize(600, 670))
         self.init_ui()
         self.pipeline = None
@@ -174,75 +175,75 @@ class MainWindow(QMainWindow):
         self.controlnet_tab = ControlNetWidget(self.config, self)
 
         # Add main window tabs here
-        self.tab_widget.addTab(self.tab_main, "Text to Image")
-        self.tab_widget.addTab(self.img2img_tab, "Image to Image")
-        self.tab_widget.addTab(self.variations_tab, "Image Variations")
-        self.tab_widget.addTab(self.upscaler_tab, "Upscaler")
-        self.tab_widget.addTab(self.tab_settings, "Settings")
-        self.tab_widget.addTab(self.loras_tab, "LoRA Models")
-        self.tab_widget.addTab(self.controlnet_tab, "ControlNet")
-        self.tab_widget.addTab(self.tab_about, "About")
+        self.tab_widget.addTab(self.tab_main, tr("tab.text_to_image"))
+        self.tab_widget.addTab(self.img2img_tab, tr("tab.image_to_image"))
+        self.tab_widget.addTab(self.variations_tab, tr("tab.image_variations"))
+        self.tab_widget.addTab(self.upscaler_tab, tr("tab.upscaler"))
+        self.tab_widget.addTab(self.tab_settings, tr("tab.settings"))
+        self.tab_widget.addTab(self.loras_tab, tr("tab.lora"))
+        self.tab_widget.addTab(self.controlnet_tab, tr("tab.controlnet"))
+        self.tab_widget.addTab(self.tab_about, tr("tab.about"))
 
         self.setCentralWidget(self.tab_widget)
         self.use_seed = False
 
     def create_settings_tab(self):
-        self.lcm_model_label = QLabel("Latent Consistency Model:")
+        self.lcm_model_label = QLabel(tr("settings.lcm_model"))
         # self.lcm_model = QLineEdit(LCM_DEFAULT_MODEL)
         self.lcm_model = QComboBox(self)
         self.lcm_model.addItems(self.config.lcm_models)
         self.lcm_model.currentIndexChanged.connect(self.on_lcm_model_changed)
 
-        self.use_lcm_lora = QCheckBox("Use LCM LoRA")
+        self.use_lcm_lora = QCheckBox(tr("settings.use_lcm_lora"))
         self.use_lcm_lora.setChecked(False)
         self.use_lcm_lora.stateChanged.connect(self.use_lcm_lora_changed)
 
-        self.lora_base_model_id_label = QLabel("Lora base model ID :")
+        self.lora_base_model_id_label = QLabel(tr("settings.lora_base_model"))
         self.base_model_id = QComboBox(self)
         self.base_model_id.addItems(self.config.stable_diffsuion_models)
         self.base_model_id.currentIndexChanged.connect(self.on_base_model_id_changed)
 
-        self.lcm_lora_model_id_label = QLabel("LCM LoRA model ID :")
+        self.lcm_lora_model_id_label = QLabel(tr("settings.lcm_lora_model"))
         self.lcm_lora_id = QComboBox(self)
         self.lcm_lora_id.addItems(self.config.lcm_lora_models)
         self.lcm_lora_id.currentIndexChanged.connect(self.on_lcm_lora_id_changed)
 
-        self.inference_steps_value = QLabel("Number of inference steps: 4")
+        self.inference_steps_value = QLabel(tr("settings.inference_steps", value=4))
         self.inference_steps = QSlider(orientation=Qt.Orientation.Horizontal)
         self.inference_steps.setMaximum(25)
         self.inference_steps.setMinimum(1)
         self.inference_steps.setValue(4)
         self.inference_steps.valueChanged.connect(self.update_steps_label)
 
-        self.num_images_value = QLabel("Number of images: 1")
+        self.num_images_value = QLabel(tr("settings.num_images", value=1))
         self.num_images = QSlider(orientation=Qt.Orientation.Horizontal)
         self.num_images.setMaximum(100)
         self.num_images.setMinimum(1)
         self.num_images.setValue(1)
         self.num_images.valueChanged.connect(self.update_num_images_label)
 
-        self.guidance_value = QLabel("Guidance scale: 1")
+        self.guidance_value = QLabel(tr("settings.guidance_scale", value=1))
         self.guidance = QSlider(orientation=Qt.Orientation.Horizontal)
         self.guidance.setMaximum(20)
         self.guidance.setMinimum(10)
         self.guidance.setValue(10)
         self.guidance.valueChanged.connect(self.update_guidance_label)
 
-        self.clip_skip_value = QLabel("CLIP Skip: 1")
+        self.clip_skip_value = QLabel(tr("settings.clip_skip", value=1))
         self.clip_skip = QSlider(orientation=Qt.Orientation.Horizontal)
         self.clip_skip.setMaximum(12)
         self.clip_skip.setMinimum(1)
         self.clip_skip.setValue(1)
         self.clip_skip.valueChanged.connect(self.update_clip_skip_label)
 
-        self.token_merging_value = QLabel("Token Merging: 0")
+        self.token_merging_value = QLabel(tr("settings.token_merging", value=0))
         self.token_merging = QSlider(orientation=Qt.Orientation.Horizontal)
         self.token_merging.setMaximum(100)
         self.token_merging.setMinimum(0)
         self.token_merging.setValue(0)
         self.token_merging.valueChanged.connect(self.update_token_merging_label)
 
-        self.width_value = QLabel("Width :")
+        self.width_value = QLabel(tr("settings.width"))
         self.width = QComboBox(self)
         self.width.addItem("256")
         self.width.addItem("384")
@@ -253,7 +254,7 @@ class MainWindow(QMainWindow):
         self.width.setCurrentText("512")
         self.width.currentIndexChanged.connect(self.on_width_changed)
 
-        self.height_value = QLabel("Height :")
+        self.height_value = QLabel(tr("settings.height"))
         self.height = QComboBox(self)
         self.height.addItem("256")
         self.height.addItem("384")
@@ -264,22 +265,20 @@ class MainWindow(QMainWindow):
         self.height.setCurrentText("512")
         self.height.currentIndexChanged.connect(self.on_height_changed)
 
-        self.seed_check = QCheckBox("Use seed")
+        self.seed_check = QCheckBox(tr("settings.use_seed"))
         self.seed_value = QLineEdit()
         self.seed_value.setInputMask("9999999999")
         self.seed_value.setText("123123")
         self.seed_check.stateChanged.connect(self.seed_changed)
 
-        self.safety_checker = QCheckBox("Use safety checker")
+        self.safety_checker = QCheckBox(tr("settings.use_safety_checker"))
         self.safety_checker.setChecked(True)
         self.safety_checker.stateChanged.connect(self.use_safety_checker_changed)
 
-        self.use_openvino_check = QCheckBox("Use OpenVINO")
+        self.use_openvino_check = QCheckBox(tr("settings.use_openvino"))
         self.use_openvino_check.setChecked(False)
-        self.openvino_model_label = QLabel("OpenVINO LCM model:")
-        self.use_local_model_folder = QCheckBox(
-            "Use locally cached model or downloaded model folder(offline)"
-        )
+        self.openvino_model_label = QLabel(tr("settings.openvino_model"))
+        self.use_local_model_folder = QCheckBox(tr("settings.use_offline_model"))
         self.openvino_lcm_model_id = QComboBox(self)
         self.openvino_lcm_model_id.addItems(self.config.openvino_lcm_models)
         self.openvino_lcm_model_id.currentIndexChanged.connect(
@@ -291,7 +290,7 @@ class MainWindow(QMainWindow):
         self.use_local_model_folder.stateChanged.connect(self.use_offline_model_changed)
         self.use_openvino_check.stateChanged.connect(self.use_openvino_changed)
 
-        self.use_tae_sd = QCheckBox("Use Tiny AutoEncoder (Fast, moderate quality)")
+        self.use_tae_sd = QCheckBox(tr("settings.use_tae_sd"))
         self.use_tae_sd.setChecked(False)
         self.use_tae_sd.stateChanged.connect(self.use_tae_sd_changed)
 
@@ -301,14 +300,14 @@ class MainWindow(QMainWindow):
         hspacer = QSpacerItem(20, 10, QSizePolicy.Expanding, QSizePolicy.Minimum)
         slider_hspacer = QSpacerItem(20, 10, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.results_path_label = QLabel("Output path:")
+        self.results_path_label = QLabel(tr("settings.output_path"))
         self.results_path = QLineEdit()
         self.results_path.textChanged.connect(self.on_path_changed)
         self.browse_folder_btn = QToolButton()
         self.browse_folder_btn.setText("...")
         self.browse_folder_btn.clicked.connect(self.on_browse_folder)
 
-        self.reset = QPushButton("Reset All")
+        self.reset = QPushButton(tr("settings.reset_all"))
         self.reset.clicked.connect(self.reset_all_settings)
 
         vlayout = QVBoxLayout()
@@ -363,11 +362,11 @@ class MainWindow(QMainWindow):
         self.label.setAlignment(Qt.AlignCenter)
         current_year = datetime.now().year
         self.label.setText(
-            f"""<h1>FastSD CPU {APP_VERSION}</h1> 
-               <h3>(c)2023 - {current_year} Rupesh Sreeraman</h3>
-                <h3>Faster stable diffusion on CPU</h3>
-                 <h3>Based on Latent Consistency Models</h3>
-                <h3>GitHub : https://github.com/rupeshs/fastsdcpu/</h3>"""
+            tr(
+                "app.about_html",
+                version=APP_VERSION,
+                year=current_year,
+            )
         )
 
         vlayout = QVBoxLayout()
@@ -419,7 +418,7 @@ class MainWindow(QMainWindow):
         options |= QFileDialog.ShowDirsOnly
 
         folder_path = QFileDialog.getExistingDirectory(
-            self, "Select a Folder", "", options=options
+            self, tr("settings.select_folder"), "", options=options
         )
 
         if folder_path:
@@ -493,12 +492,12 @@ class MainWindow(QMainWindow):
         self.settings_changed.emit()
 
     def update_clip_skip_label(self, value):
-        self.clip_skip_value.setText(f"CLIP Skip: {value}")
+        self.clip_skip_value.setText(tr("settings.clip_skip", value=value))
         self.config.settings.lcm_diffusion_setting.clip_skip = value
 
     def update_token_merging_label(self, value):
         val = round(int(value) / 100, 1)
-        self.token_merging_value.setText(f"Token Merging: {val}")
+        self.token_merging_value.setText(tr("settings.token_merging", value=val))
         self.config.settings.lcm_diffusion_setting.token_merging = val
 
     def use_safety_checker_changed(self, state):
@@ -508,16 +507,16 @@ class MainWindow(QMainWindow):
             self.config.settings.lcm_diffusion_setting.use_safety_checker = False
 
     def update_steps_label(self, value):
-        self.inference_steps_value.setText(f"Number of inference steps: {value}")
+        self.inference_steps_value.setText(tr("settings.inference_steps", value=value))
         self.config.settings.lcm_diffusion_setting.inference_steps = value
 
     def update_num_images_label(self, value):
-        self.num_images_value.setText(f"Number of images: {value}")
+        self.num_images_value.setText(tr("settings.num_images", value=value))
         self.config.settings.lcm_diffusion_setting.number_of_images = value
 
     def update_guidance_label(self, value):
         val = round(int(value) / 10, 1)
-        self.guidance_value.setText(f"Guidance scale: {val}")
+        self.guidance_value.setText(tr("settings.guidance_scale", value=val))
         self.config.settings.lcm_diffusion_setting.guidance_scale = val
 
     def seed_changed(self, state):

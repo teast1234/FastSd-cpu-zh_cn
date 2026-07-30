@@ -1,14 +1,14 @@
 @echo off
 setlocal
-echo Starting fastsdcpu...
+echo 正在启动 FastSD CPU...
 
 set "PYTHON_COMMAND=python"
 
 call python --version > nul 2>&1
 if %errorlevel% equ 0 (
-    echo Python command check :OK
+    echo Python 检查：通过
 ) else (
-    echo "Error: Python command not found, please install Python (Recommended : Python 3.10 or Python 3.11) and try again"
+    echo 错误：未找到 Python，请安装 Python 3.10 或 3.11 后重试
     pause
     exit /b 1
     
@@ -19,7 +19,7 @@ for /f "tokens=2" %%I in ('%PYTHON_COMMAND% --version 2^>^&1') do (
     set "python_version=%%I"
 )
 
-echo Python version: %python_version%
+echo Python 版本：%python_version%
 
 set PATH=%PATH%;%~dp0env\Lib\site-packages\openvino\libs
 call "%~dp0env\Scripts\activate.bat"  && %PYTHON_COMMAND% "%~dp0\src\app.py" --gui

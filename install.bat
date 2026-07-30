@@ -31,8 +31,18 @@ for /f "tokens=2" %%I in ('%PYTHON_COMMAND% --version 2^>^&1') do (
 
 echo Python version: %python_version%
 
-uv venv --python 3.11.6 "%~dp0env" 
-call "%~dp0env\Scripts\activate.bat" && uv pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu 
+uv venv --python 3.11.6 "%~dp0env"
+call "%~dp0env\Scripts\activate.bat" && uv pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu
 call "%~dp0env\Scripts\activate.bat" && uv pip install -r "%~dp0requirements.txt"
+REM Re-pin versions that transitive deps may upgrade (torch, numpy, onnxruntime, etc.)
+call "%~dp0env\Scripts\activate.bat" && uv pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu numpy==1.26.4 Pillow==9.4.0 onnxruntime==1.19.2 sentencepiece==0.2.0 protobuf==4.25.9
+echo.
+echo Verifying critical dependencies...
+call "%~dp0env\Scripts\activate.bat" && python -c "import torch, torchvision, sentencepiece, onnxruntime, cv2; print('Dependency check: OK')"
+if %errorlevel% neq 0 (
+    echo Error: Dependency verification failed. See Readme.md Windows dependency section.
+    pause
+    exit /b 1
+)
 echo FastSD CPU env installation completed.
 pause

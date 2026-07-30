@@ -24,6 +24,7 @@ from backend.lora import (
 from frontend.gui.common_widgets import LabeledSlider
 from app_settings import AppSettings
 from paths import FastStableDiffusionPaths
+from frontend.i18n import tr
 
 if __name__ != "__main__":
     from state import get_settings, get_context
@@ -69,18 +70,18 @@ class LoraModelsWidget(QWidget):
         self.models_combobox = QComboBox()
         self.models_combobox.addItems(lora_models_map.keys())
         self.models_combobox.setToolTip(
-            "<p style='white-space:pre'>Place LoRA models in the <b>lora_models</b> folder</p>"
+            f"<p style='white-space:pre'>{tr('lora.tooltip')}</p>"
         )
         self.weight_slider = LabeledSlider(True)
-        self.load_button = QPushButton("Load selected LoRA")
+        self.load_button = QPushButton(tr("lora.load"))
         self.load_button.setEnabled(False)
         self.load_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         self.load_button.setStyleSheet("padding: 10px")
         self.load_button.clicked.connect(self.on_load_lora)
         if len(lora_models_map) > 0:
             self.load_button.setEnabled(True)
-        self.loaded_label = QLabel("Loaded LoRA models:")
-        self.update_button = QPushButton("Update LoRA weights")
+        self.loaded_label = QLabel(tr("lora.loaded"))
+        self.update_button = QPushButton(tr("lora.update_weights"))
         self.update_button.setEnabled(False)
         self.update_button.clicked.connect(self.on_update_weights)
         self.separator = QLabel()
@@ -88,11 +89,9 @@ class LoraModelsWidget(QWidget):
 
         glayout = QGridLayout()
         glayout.setVerticalSpacing(0)
-        glayout.addWidget(QLabel("LoRA model:"), 0, 0)
+        glayout.addWidget(QLabel(tr("lora.model")), 0, 0)
         glayout.addWidget(
-            QLabel(
-                "Initial LoRA weight:",
-            ),
+            QLabel(tr("lora.initial_weight")),
             0,
             1,
         )
@@ -127,8 +126,8 @@ class LoraModelsWidget(QWidget):
         if self.config.settings.lcm_diffusion_setting.use_openvino:
             QMessageBox().information(
                 self.parent,
-                "Error",
-                "LoRA suppport is currently not implemented for OpenVINO.",
+                tr("dialog.error"),
+                tr("lora.error_openvino"),
             )
             return
         lora_models_map = get_lora_models(
@@ -146,13 +145,13 @@ class LoraModelsWidget(QWidget):
         settings.lora.path = lora_models_map[current_lora]
         settings.lora.weight = current_weight
         if not path.exists(settings.lora.path):
-            QMessageBox.information(self.parent, "Error", "Invalid LoRA model path!")
+            QMessageBox.information(self.parent, tr("dialog.error"), tr("lora.error_invalid_path"))
             return
         if not self.parent.context.lcm_text_to_image.pipeline:
             QMessageBox.information(
                 self.parent,
-                "Error",
-                "Pipeline not initialized. Please generate an image first.",
+                tr("dialog.error"),
+                tr("lora.error_pipeline"),
             )
             return
         settings.lora.enabled = True

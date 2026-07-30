@@ -29,6 +29,8 @@ from paths import FastStableDiffusionPaths
 from backend.models.lcmdiffusion_setting import DiffusionTask, ControlNetSetting
 from backend.annotators.image_control_factory import ImageControlFactory
 from frontend.gui.common_widgets import LabeledSlider, ImageLabel
+from frontend.i18n import tr
+from frontend.i18n import zh_CN
 
 if __name__ != "__main__":
     from state import get_settings, get_context
@@ -59,14 +61,9 @@ class ControlNetWidget(QWidget):
             )
         if len(_controlnet_models_map) > 0:
             _current_controlnet_adapter = list(_controlnet_models_map.keys())[0]
-        self.message_label = QLabel(
-            "<p style='white-space:pre'>Download ControlNet v1.1 models (723 MB files) from "
-            "<a href='https://huggingface.co/comfyanonymous/ControlNet-v1-1_fp16_safetensors/tree/main'>"
-            "ControlNet v1.1</a>.<br>Place the models in the <b>controlnet_models</b> folder."
-            "<br>Restart the application to detect newly installed models.</p>"
-        )
+        self.message_label = QLabel(tr("controlnet.help_html"))
         self.message_label.setOpenExternalLinks(True)
-        self.enabled_checkbox = QCheckBox("Enable ControlNet")
+        self.enabled_checkbox = QCheckBox(tr("controlnet.enable"))
         self.enabled_checkbox.setEnabled(False)
         self.enabled_checkbox.stateChanged.connect(self.on_enable_changed)
         if len(_controlnet_models_map) > 0:
@@ -75,7 +72,7 @@ class ControlNetWidget(QWidget):
         self.models_combobox.setMaximumWidth(160)
         self.models_combobox.addItems(_controlnet_models_map.keys())
         self.models_combobox.setToolTip(
-            "<p style='white-space:pre'>Place ControlNet models in the <b>controlnet_models</b> folder</p>"
+            f"<p style='white-space:pre'>{tr('controlnet.tooltip')}</p>"
         )
         self.models_combobox.currentTextChanged.connect(self.on_combo_changed)
         self.weight_slider = LabeledSlider(True)
@@ -83,9 +80,9 @@ class ControlNetWidget(QWidget):
         self.weight_slider.valueChanged.connect(self.on_weight_changed)
         self.image_button = QToolButton()
         self.image_button.setText("...")
-        self.image_button.setToolTip("Click to select control image.")
+        self.image_button.setToolTip(tr("controlnet.select_image_tooltip"))
         self.image_button.clicked.connect(self.controlnet_file_dialog)
-        self.image_label = ImageLabel("<<Control image>>", 256, 256)
+        self.image_label = ImageLabel(tr("control_image_placeholder"), 256, 256)
         self.image_label.setMinimumSize(QSize(256, 256))
         self.image_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.image_label.setFrameShape(QFrame.Box)
@@ -95,18 +92,19 @@ class ControlNetWidget(QWidget):
         radio_buttons_layout = QHBoxLayout()
         self.radio_buttons_group = QButtonGroup()
         radio_buttons_text = [
-            "Canny",
-            "Depth",
-            "Lineart",
-            "MLSD",
-            "NormalBAE",
-            "Pose",
-            "SoftEdge",
-            "Shuffle",
-            "None",
+            "preprocessor.canny",
+            "preprocessor.depth",
+            "preprocessor.lineart",
+            "preprocessor.mlsd",
+            "preprocessor.normalbae",
+            "preprocessor.pose",
+            "preprocessor.softedge",
+            "preprocessor.shuffle",
+            "preprocessor.none",
         ]
-        for text in radio_buttons_text:
-            radio_button = QRadioButton(text)
+        for key in radio_buttons_text:
+            radio_button = QRadioButton(tr(key))
+            radio_button.setProperty("preprocessor_key", zh_CN.PREPROCESSOR_KEYS[key])
             radio_buttons_layout.addWidget(radio_button)
             self.radio_buttons_group.addButton(radio_button)
         radio_button.setChecked(True)
@@ -117,9 +115,9 @@ class ControlNetWidget(QWidget):
         self.separator.setFrameShape(QFrame.HLine)
         hlayout = QGridLayout(self.container)
         hlayout.setContentsMargins(0, 0, 0, 0)
-        hlayout.addWidget(QLabel("ControlNet model:"), 0, 0)
-        hlayout.addWidget(QLabel("Conditioning scale:"), 0, 1)
-        hlayout.addWidget(QLabel("Control image:"), 0, 2)
+        hlayout.addWidget(QLabel(tr("controlnet.model")), 0, 0)
+        hlayout.addWidget(QLabel(tr("controlnet.conditioning_scale")), 0, 1)
+        hlayout.addWidget(QLabel(tr("controlnet.control_image")), 0, 2)
         hlayout.addWidget(self.models_combobox, 1, 0, Qt.AlignTop)
         hlayout.addWidget(self.weight_slider, 1, 1, Qt.AlignTop)
         hlayout.addWidget(self.image_label, 1, 2)
@@ -136,7 +134,9 @@ class ControlNetWidget(QWidget):
     def on_image_changed(self):
         global _current_controlnet_image
         _current_controlnet_image = Image.open(self.image_label.path)
-        selected_preprocessor = self.radio_buttons_group.checkedButton().text()
+        selected_preprocessor = self.radio_buttons_group.checkedButton().property(
+            "preprocessor_key"
+        )
         if selected_preprocessor != "None":
             image_control_factory = ImageControlFactory()
             control = image_control_factory.create_control(selected_preprocessor)
@@ -190,7 +190,7 @@ class ControlNetWidget(QWidget):
 
     def controlnet_file_dialog(self):
         fileName = QFileDialog.getOpenFileName(
-            self, "Open Image", "results", "Image Files (*.png *.jpg *.bmp *.webp)"
+            self, tr("controlnet.open_image"), "results", tr("controlnet.image_filter")
         )
         if fileName[0] != "":
             self.image_label.path = fileName[0]

@@ -11,6 +11,7 @@ from backend.models.upscale import UpscaleMode
 from backend.upscale.upscaler import upscale_image
 from frontend.gui.img2img_widget import Img2ImgWidget
 from paths import FastStableDiffusionPaths
+from frontend.i18n import tr
 
 
 class UpscalerWidget(Img2ImgWidget):
@@ -24,7 +25,7 @@ class UpscalerWidget(Img2ImgWidget):
         # self.neg_prompt.deleteLater()
         self.strength_label.hide()
         self.strength.hide()
-        self.generate.setText("Upscale")
+        self.generate.setText(tr("upscale"))
         # Create upscaler widgets
         self.edsr_button = QRadioButton("EDSR", self)
         self.edsr_button.toggled.connect(self.on_mode_change)
@@ -34,7 +35,7 @@ class UpscalerWidget(Img2ImgWidget):
         self.aura_button = QRadioButton("AURA-SR", self)
         self.aura_button.toggled.connect(self.on_mode_change)
 
-        self.neg_prompt_label.setText("Upscale mode (2x) | AURA-SR (4x):")
+        self.neg_prompt_label.setText(tr("upscaler.mode_label"))
         # Create upscaler buttons layout
         hlayout = QHBoxLayout()
         hlayout.addWidget(self.edsr_button)

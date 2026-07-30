@@ -27,6 +27,7 @@ from urllib.parse import urlparse, unquote
 from models.interface_types import InterfaceType
 from frontend.gui.image_generator_worker import ImageGeneratorWorker
 from frontend.gui.common_widgets import ImageLabel
+from frontend.i18n import tr
 
 
 class BaseWidget(QWidget):
@@ -42,26 +43,26 @@ class BaseWidget(QWidget):
         self.prev_btn = QToolButton()
         self.prev_btn.setText("<")
         self.prev_btn.clicked.connect(self.on_show_previous_image)
-        self.img = ImageLabel("<<Image>>")
+        self.img = ImageLabel(tr("image_placeholder"))
         self.next_btn = QToolButton()
         self.next_btn.setText(">")
         self.next_btn.clicked.connect(self.on_show_next_image)
         self.prompt = QTextEdit()
-        self.prompt.setPlaceholderText("A fantasy landscape")
+        self.prompt.setPlaceholderText(tr("prompt.placeholder"))
         self.prompt.setAcceptRichText(False)
         self.prompt.setFixedHeight(40)
         self.neg_prompt = QTextEdit()
         self.neg_prompt.setPlaceholderText("")
         self.neg_prompt.setAcceptRichText(False)
-        self.neg_prompt_label = QLabel("Negative prompt (Set guidance scale > 1.0):")
+        self.neg_prompt_label = QLabel(tr("negative_prompt.label"))
         self.neg_prompt.setFixedHeight(35)
         self.neg_prompt.setEnabled(False)
-        self.generate = QPushButton("Generate")
+        self.generate = QPushButton(tr("generate"))
         self.generate.clicked.connect(self.generate_click)
         self.browse_results = QPushButton("...")
         self.browse_results.setFixedWidth(30)
         self.browse_results.clicked.connect(self.on_open_results_folder)
-        self.browse_results.setToolTip("Open output folder")
+        self.browse_results.setToolTip(tr("open_output_folder"))
 
         # Create the image navigation layout
         ilayout = QHBoxLayout()
@@ -144,7 +145,7 @@ class BaseWidget(QWidget):
         )
 
     def generate_click(self):
-        self.img.setText("Please wait...")
+        self.img.setText(tr("please_wait"))
         self.before_generation()
         worker = ImageGeneratorWorker(self.generate_image)
         self.parent.threadpool.start(worker)
